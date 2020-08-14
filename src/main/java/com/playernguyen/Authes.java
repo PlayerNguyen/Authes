@@ -1,12 +1,20 @@
 package com.playernguyen;
 
 import com.playernguyen.account.AccountManager;
+import com.playernguyen.account.SQLAccountManager;
+import com.playernguyen.account.SessionManager;
 import com.playernguyen.config.AuthesConfiguration;
+import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
+import com.playernguyen.config.LanguageFlag;
 import com.playernguyen.listener.ListenerManager;
+import com.playernguyen.listener.PlayerInteractListener;
+import com.playernguyen.listener.PlayerJoinListener;
+import com.playernguyen.listener.PlayerMoveListener;
 import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
 import com.playernguyen.util.MySQLUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -19,8 +27,11 @@ public class Authes extends JavaPlugin {
     private static Authes instance;
     private AuthesConfiguration configuration;
     private SQLEstablishment establishment;
-    private AccountManager accountManager;
+    private SQLAccountManager SQLAccountManager;
     private ListenerManager listenerManager;
+    private AccountManager accountManager;
+    private SessionManager sessionManager;
+    private AuthesLanguage authesLanguage;
 
     @Override
     public void onEnable() {
@@ -33,21 +44,27 @@ public class Authes extends JavaPlugin {
         setupAccount();
         // Set up listener
         setupListener();
+        // Session
+        setupSession();
+    }
+
+    private void setupSession() {
+        sessionManager = new SessionManager();
     }
 
     private void setupAccount() {
+        this.SQLAccountManager = new SQLAccountManager();
         this.accountManager = new AccountManager();
-
     }
 
     private void setupConfiguration() {
         try {
             this.configuration = new AuthesConfiguration();
+            this.authesLanguage = new AuthesLanguage();
         } catch (IOException e) {
             this.getLogger().severe("Cannot saving config.yml...");
             e.printStackTrace();
         }
-
     }
 
     private void setupConnection() {
@@ -73,13 +90,14 @@ public class Authes extends JavaPlugin {
             if (!MySQLUtil.hasTable(connection, getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT))) {
                 this.getLogger().info("Not found account table. Create the new one...");
                 // Create account table. Which storage all players information
-                PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE `?` (`id` INT(32) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                        "`username` VARCHAR(255) NOT NULL," +
-                        "`uuid` VARCHAR(255) NOT NULL," +
-                        "`hash` VARCHAR(255) NOT NULL," +
-                        "`email` VARCHAR(255) NOT NULL);");
-                // Put the parameter
-                preparedStatement.setString(1, getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT));
+                PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                        "CREATE TABLE `%s` (`id` INT(32) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                                "`username` VARCHAR(255) NOT NULL," +
+                                "`uuid` VARCHAR(255) NOT NULL," +
+                                "`hash` VARCHAR(255) NOT NULL," +
+                                "`email` VARCHAR(255) NOT NULL);",
+                        getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT)
+                ));
                 // Execute
                 preparedStatement.executeUpdate();
             }
@@ -93,19 +111,41 @@ public class Authes extends JavaPlugin {
 
     private void setupListener() {
         this.listenerManager = new ListenerManager();
+        // Append event here
+        getListenerManager().add(new PlayerJoinListener());
+        getListenerManager().add(new PlayerMoveListener());
+        getListenerManager().add(new PlayerInteractListener());
         // Register listener
+        getListenerManager().forEach(e
+                -> Bukkit.getServer().getPluginManager().registerEvents(e, this));
     }
 
-    protected AccountManager getAccountManager() {
-        return accountManager;
+    protected ListenerManager getListenerManager() {
+        return listenerManager;
+    }
+
+    protected SQLAccountManager getSQLAccountManager() {
+        return SQLAccountManager;
     }
 
     protected AuthesConfiguration getConfiguration() {
         return configuration;
     }
 
+    protected AccountManager getAccountManager() {
+        return accountManager;
+    }
+
+    protected SessionManager getSessionManager() {
+        return sessionManager;
+    }
+
     protected SQLEstablishment getEstablishment() {
         return establishment;
+    }
+
+    protected AuthesLanguage getLanguage() {
+        return authesLanguage;
     }
 
     protected static Authes getInstance() {

@@ -1,13 +1,13 @@
 package com.playernguyen.manager;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * An immutable set to make that true
  */
 public interface Manager<T> extends Iterable<T>{
 
-    Collection<T> getContainer();
+    List<T> getContainer();
 
     void add(T item);
 

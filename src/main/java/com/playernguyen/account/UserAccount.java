@@ -27,7 +27,7 @@ public class UserAccount implements Account {
     }
 
     @Override
-    public boolean validPassword(String password) {
+    public boolean validate(String password) {
         return BCrypt.checkpw(password, hash);
     }
 

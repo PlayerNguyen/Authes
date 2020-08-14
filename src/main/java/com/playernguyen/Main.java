@@ -2,7 +2,7 @@ package com.playernguyen;
 
 import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
-import com.playernguyen.util.ResultFetcher;
+import com.playernguyen.util.MySQLUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ public class Main {
             PreparedStatement execution = c.prepareStatement("SHOW TABLES;");
             ResultSet resultSet = execution.executeQuery();
 
-            System.out.println(new ResultFetcher(resultSet).search("demo"));;
+            System.out.println(MySQLUtil.hasTable(c, "demo"));
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

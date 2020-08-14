@@ -6,7 +6,7 @@ public interface Account {
 
     UUID getUniqueId();
 
-    boolean validPassword(String password);
+    boolean validate(String password);
 
     boolean isRegistered();
 
