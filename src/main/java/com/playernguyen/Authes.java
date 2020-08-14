@@ -4,6 +4,7 @@ import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
+import com.playernguyen.util.MySQLUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class Authes extends JavaPlugin {
     }
 
     private void setupConnection() {
-        // Set up
+        // Set up the connection
         try {
             this.establishment = new MySQLEstablishment(
                     getConfiguration().getString(ConfigurationFlag.MYSQL_HOST),
@@ -53,10 +54,23 @@ public class Authes extends JavaPlugin {
         this.getLogger().info("Connecting to the MySQL server...");
         try (Connection connection = getEstablishment().openConnection()) {
             this.getLogger().info("Success connect to the MySQL server");
+            // Initial the table
+            // If not found account table. Initial one
+            if (!MySQLUtil.hasTable(connection, getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT))) {
+                this.getLogger().info("Not found account table. Create the new one...");
+                // Create account table. Which storage all players information
+                connection.prepareStatement("CREATE TABLE (`id` INT(32) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                        "`username` VARCHAR(255) NOT NULL," +
+                        "`uuid` VARCHAR(255) NOT NULL," +
+                        "`hash` VARCHAR(255) NOT NULL," +
+                        "`email` VARCHAR(255) NOT NULL);")
+                ;
+            }
         } catch (SQLException e) {
-            this.getLogger().severe("Cannot connect to the MySQL server. StackTrace: ");
+            this.getLogger().severe("SQLException...StackTrace: ");
             e.printStackTrace();
         }
+
     }
 
     protected AuthesConfiguration getConfiguration() {

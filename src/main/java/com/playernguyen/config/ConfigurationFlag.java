@@ -6,7 +6,8 @@ public enum ConfigurationFlag {
     MYSQL_USERNAME("mysql.username", "nguyen"),
     MYSQL_PASSWORD("mysql.password", ""),
     MYSQL_DATABASE("mysql.database", "authes"),
-    MYSQL_PORT("mysql.port", "3306")
+    MYSQL_PORT("mysql.port", "3306"),
+    MYSQL_TABLE_ACCOUNT("mysql.table.account", "authes_account")
     ;
 
     private final String path;
