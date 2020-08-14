@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Authes extends JavaPlugin {
@@ -50,7 +51,7 @@ public class Authes extends JavaPlugin {
             this.getLogger().severe("Not found driver class of MySQL...");
             e.printStackTrace();
         }
-        // Hit the tester
+        // Hit the tester & handle table
         this.getLogger().info("Connecting to the MySQL server...");
         try (Connection connection = getEstablishment().openConnection()) {
             this.getLogger().info("Success connect to the MySQL server");
@@ -59,12 +60,15 @@ public class Authes extends JavaPlugin {
             if (!MySQLUtil.hasTable(connection, getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT))) {
                 this.getLogger().info("Not found account table. Create the new one...");
                 // Create account table. Which storage all players information
-                connection.prepareStatement("CREATE TABLE (`id` INT(32) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE `?` (`id` INT(32) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                         "`username` VARCHAR(255) NOT NULL," +
                         "`uuid` VARCHAR(255) NOT NULL," +
                         "`hash` VARCHAR(255) NOT NULL," +
-                        "`email` VARCHAR(255) NOT NULL);")
-                ;
+                        "`email` VARCHAR(255) NOT NULL);");
+                // Put the parameter
+                preparedStatement.setString(1, getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT));
+                // Execute
+                preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             this.getLogger().severe("SQLException...StackTrace: ");
