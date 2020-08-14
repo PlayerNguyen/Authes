@@ -1,13 +1,24 @@
 package com.playernguyen.account;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.UUID;
 
 public class UserAccount implements Account {
 
     private final UUID uniqueId;
+    private final boolean isRegistered;
+    private String hash;
 
-    public UserAccount(UUID uniqueId) {
+    public UserAccount(UUID uniqueId, boolean isRegistered) {
         this.uniqueId = uniqueId;
+        this.isRegistered = isRegistered;
+    }
+
+    public UserAccount(UUID uniqueId, boolean isRegistered, String hash) {
+        this.uniqueId = uniqueId;
+        this.isRegistered = isRegistered;
+        this.hash = hash;
     }
 
     @Override
@@ -17,6 +28,11 @@ public class UserAccount implements Account {
 
     @Override
     public boolean validPassword(String password) {
-        return false;// TODO: put this function into work :)
+        return BCrypt.checkpw(password, hash);
+    }
+
+    @Override
+    public boolean isRegistered() {
+        return isRegistered;
     }
 }

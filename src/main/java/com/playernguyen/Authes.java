@@ -35,6 +35,7 @@ public class Authes extends JavaPlugin {
 
     private void setupAccount() {
         this.accountManager = new AccountManager();
+
     }
 
     private void setupConfiguration() {

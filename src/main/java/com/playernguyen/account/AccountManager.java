@@ -19,7 +19,7 @@ public class AccountManager extends AuthesInstance {
     }
 
     /**
-     * Chec that player found or not
+     * Check that player found or not
      * @param uuid The uuid of player
      * @return Whether player are existed or not
      */
@@ -27,7 +27,7 @@ public class AccountManager extends AuthesInstance {
         try (Connection connection = getEstablishment().openConnection()) {
             // Prepare statement
             PreparedStatement preparedStatement = connection.prepareStatement(String.format(
-                    "SELECT * FROM %s WHERE `uuid`=?",
+                    "SELECT * FROM `%s` WHERE `uuid`=?",
                     tableName
             ));
             // Parameter define
@@ -40,6 +40,29 @@ public class AccountManager extends AuthesInstance {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public Account getAccount(UUID uuid) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            // New member
+            if (!hasPlayer(uuid)) {
+                return new UserAccount(uuid, false);
+            }
+            // The old one
+            PreparedStatement statement = connection.prepareStatement(String.format(
+                    "SELECT * FROM `%s` WHERE `uuid`=?",
+                    tableName
+            ));
+            // Parameter set
+            statement.setString(1, uuid.toString());
+            // Fire in a hole & get hash
+            ResultSet resultSet = statement.executeQuery();
+            String hash = (String) new ResultFetcher(resultSet).first().get("hash");
+            return new UserAccount(uuid, true, hash);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

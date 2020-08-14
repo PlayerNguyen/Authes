@@ -8,4 +8,6 @@ public interface Account {
 
     boolean validPassword(String password);
 
+    boolean isRegistered();
+
 }
