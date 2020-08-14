@@ -48,4 +48,11 @@ public class ResultFetcher{
     public int size() {
         return getData().size();
     }
+
+    public HashMap<String, Object> first() {
+        if (size() <= 0) {
+            throw new ArrayIndexOutOfBoundsException("Not exist any item in array!");
+        }
+        return data.get(0);
+    }
 }

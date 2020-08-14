@@ -25,6 +25,8 @@ public class Authes extends JavaPlugin {
         setupConfiguration();
         // Set up the connection
         setupConnection();
+        // Set up listener
+        setupListener();
     }
 
     private void setupConfiguration() {
@@ -71,9 +73,14 @@ public class Authes extends JavaPlugin {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            this.getLogger().severe("SQLException...StackTrace: ");
+            this.getLogger().severe("SQLException. Disable...StackTrace: ");
             e.printStackTrace();
+            this.getPluginLoader().disablePlugin(this);
         }
+
+    }
+
+    private void setupListener() {
 
     }
 
