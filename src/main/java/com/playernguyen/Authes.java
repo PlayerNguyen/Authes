@@ -1,5 +1,6 @@
 package com.playernguyen;
 
+import com.playernguyen.account.AccountManager;
 import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.sql.MySQLEstablishment;
@@ -17,6 +18,7 @@ public class Authes extends JavaPlugin {
     private static Authes instance;
     private AuthesConfiguration configuration;
     private SQLEstablishment establishment;
+    private AccountManager accountManager;
 
     @Override
     public void onEnable() {
@@ -25,8 +27,14 @@ public class Authes extends JavaPlugin {
         setupConfiguration();
         // Set up the connection
         setupConnection();
+        // Set up accounts
+        setupAccount();
         // Set up listener
         setupListener();
+    }
+
+    private void setupAccount() {
+        this.accountManager = new AccountManager();
     }
 
     private void setupConfiguration() {
@@ -82,6 +90,10 @@ public class Authes extends JavaPlugin {
 
     private void setupListener() {
 
+    }
+
+    protected AccountManager getAccountManager() {
+        return accountManager;
     }
 
     protected AuthesConfiguration getConfiguration() {
