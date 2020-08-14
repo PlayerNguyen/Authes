@@ -39,6 +39,10 @@ public class AuthesConfiguration extends AuthesInstance {
         return getFileConfiguration().get(flag.getPath());
     }
 
+    public String getString(ConfigurationFlag flag) {
+        return (String) getByFlag(flag);
+    }
+
     public void save() throws IOException {
         this.fileConfiguration.save(this.file);
     }
