@@ -20,7 +20,7 @@ public class MySQLEstablishment implements SQLEstablishment {
         this.port = port;
 
         // Validation of class
-        Class.forName("com.mysql.jdbc.driver");
+        Class.forName("com.mysql.jdbc.Driver");
     }
 
 
