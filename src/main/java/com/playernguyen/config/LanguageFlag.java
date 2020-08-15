@@ -5,7 +5,8 @@ public enum LanguageFlag {
     REQUIRE_REGISTER("require-register", "Please register by using /register <password> <confirmPassword>"),
     REQUIRE_LOGIN("require-login", "Please login by using /login <password>"),
 
-    KICK_REASON("kick-reason", "You has been kicked because not register/login")
+    KICK_REASON("kick-reason", "You has been kicked because not register/login"),
+    NO_PERMISSION_COMMAND("no-permission-command", "You has no permission to do this")
     ;
 
     private final String path;

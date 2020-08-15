@@ -2,7 +2,6 @@ package com.playernguyen.schedule;
 
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.config.LanguageFlag;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ForceRegisterRunnable extends AuthesRunnable {
