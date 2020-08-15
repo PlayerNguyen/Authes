@@ -9,11 +9,11 @@ import org.bukkit.command.TabExecutor;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class CommandInterface extends AuthesInstance implements TabExecutor {
+public abstract class CommandAbstract extends AuthesInstance implements TabExecutor {
 
     private final String command;
 
-    public CommandInterface(String command) {
+    public CommandAbstract(String command) {
         this.command = command;
     }
 
@@ -38,6 +38,10 @@ public abstract class CommandInterface extends AuthesInstance implements TabExec
         switch (commandState) {
             case NO_PERMISSION: {
                 sender.sendMessage(getLanguage().get(LanguageFlag.NO_PERMISSION_COMMAND));
+                return true;
+            }
+
+            case NOTHING: {
                 return true;
             }
 

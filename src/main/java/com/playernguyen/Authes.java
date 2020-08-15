@@ -3,6 +3,8 @@ package com.playernguyen;
 import com.playernguyen.account.AccountManager;
 import com.playernguyen.account.SQLAccountManager;
 import com.playernguyen.account.SessionManager;
+import com.playernguyen.command.CommandManager;
+import com.playernguyen.command.CommandRegister;
 import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
@@ -14,6 +16,7 @@ import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
 import com.playernguyen.util.MySQLUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -31,6 +34,7 @@ public class Authes extends JavaPlugin {
     private AccountManager accountManager;
     private SessionManager sessionManager;
     private AuthesLanguage authesLanguage;
+    private CommandManager commandManager;
 
     @Override
     public void onEnable() {
@@ -45,6 +49,30 @@ public class Authes extends JavaPlugin {
         setupListener();
         // Session
         setupSession();
+        // Set up command
+        setupCommand();
+    }
+
+    private void setupCommand() {
+        this.commandManager = new CommandManager();
+        // Append command
+        commandManager.add(new CommandRegister());
+
+        // Register command
+        commandManager.forEach(e -> {
+            String command = e.getCommand();
+            PluginCommand pluginCommand = Bukkit.getPluginCommand(command);
+            // If not found
+            if (pluginCommand == null) {
+                throw new NullPointerException(String.format(
+                        "Cannot found plugin command %s",
+                        command
+                ));
+            }
+
+            // Set executor
+            pluginCommand.setExecutor(e);
+        });
     }
 
     private void setupSession() {
@@ -146,6 +174,10 @@ public class Authes extends JavaPlugin {
 
     public AuthesLanguage getLanguage() {
         return authesLanguage;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     public static Authes getInstance() {
