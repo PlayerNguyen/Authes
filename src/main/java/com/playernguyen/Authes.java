@@ -6,7 +6,6 @@ import com.playernguyen.account.SessionManager;
 import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
-import com.playernguyen.config.LanguageFlag;
 import com.playernguyen.listener.ListenerManager;
 import com.playernguyen.listener.PlayerInteractListener;
 import com.playernguyen.listener.PlayerJoinListener;
@@ -104,6 +103,7 @@ public class Authes extends JavaPlugin {
         } catch (SQLException e) {
             this.getLogger().severe("SQLException. Disable...StackTrace: ");
             e.printStackTrace();
+            // catch error and disable plugin
             this.getPluginLoader().disablePlugin(this);
         }
 
@@ -120,35 +120,35 @@ public class Authes extends JavaPlugin {
                 -> Bukkit.getServer().getPluginManager().registerEvents(e, this));
     }
 
-    protected ListenerManager getListenerManager() {
+    public ListenerManager getListenerManager() {
         return listenerManager;
     }
 
-    protected SQLAccountManager getSQLAccountManager() {
+    public SQLAccountManager getSQLAccountManager() {
         return SQLAccountManager;
     }
 
-    protected AuthesConfiguration getConfiguration() {
+    public AuthesConfiguration getConfiguration() {
         return configuration;
     }
 
-    protected AccountManager getAccountManager() {
+    public AccountManager getAccountManager() {
         return accountManager;
     }
 
-    protected SessionManager getSessionManager() {
+    public SessionManager getSessionManager() {
         return sessionManager;
     }
 
-    protected SQLEstablishment getEstablishment() {
+    public SQLEstablishment getEstablishment() {
         return establishment;
     }
 
-    protected AuthesLanguage getLanguage() {
+    public AuthesLanguage getLanguage() {
         return authesLanguage;
     }
 
-    protected static Authes getInstance() {
+    public static Authes getInstance() {
         return instance;
     }
 }

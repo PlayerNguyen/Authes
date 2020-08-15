@@ -2,6 +2,7 @@ package com.playernguyen.schedule;
 
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.config.LanguageFlag;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ForceRegisterRunnable extends AuthesRunnable {
@@ -20,7 +21,17 @@ public class ForceRegisterRunnable extends AuthesRunnable {
 
     @Override
     public void run() {
-        ticker --;
-        getPlayer().sendMessage(getLanguage().get(LanguageFlag.REQUIRE_REGISTER));
+        this.ticker --;
+        if (player != null) {
+            this.getPlayer().sendMessage(getLanguage().get(LanguageFlag.REQUIRE_REGISTER));
+            // If out of time, kick player
+            if (ticker <= 0) {
+                this.getPlayer().kickPlayer(this.getLanguage().get(LanguageFlag.KICK_REASON));
+                // Cancel the task too
+                this.cancel();
+            }
+        } else {
+            this.cancel();
+        }
     }
 }
