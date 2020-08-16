@@ -41,6 +41,11 @@ public abstract class CommandAbstract extends AuthesInstance implements TabExecu
                 return true;
             }
 
+            case INVALID_SENDER: {
+                sender.sendMessage(getLanguage().get(LanguageFlag.INVALID_SENDER));
+                return true;
+            }
+
             case NOTHING: {
                 return true;
             }

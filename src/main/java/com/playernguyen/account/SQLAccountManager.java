@@ -89,8 +89,22 @@ public class SQLAccountManager extends AuthesInstance {
         return false;
     }
 
-    public void login(Player player, String plaintext) {
-
+    public boolean login(Player player, String plaintext) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "SELECT * FROM `%s` WHERE `uuid`=?",
+                    tableName
+            ));
+            // Set the parameter
+            preparedStatement.setString(1, player.getUniqueId().toString());
+            ResultFetcher resultFetcher = new ResultFetcher(preparedStatement.executeQuery());
+            // Handle hash check
+            String hash = (String) resultFetcher.first().get("hash");
+            return BCrypt.checkpw(plaintext, hash);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

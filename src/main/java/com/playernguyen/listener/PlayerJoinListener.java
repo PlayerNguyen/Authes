@@ -2,8 +2,7 @@ package com.playernguyen.listener;
 
 import com.playernguyen.AuthesInstance;
 import com.playernguyen.account.Account;
-import com.playernguyen.schedule.ForceRegisterRunnable;
-import org.bukkit.Bukkit;
+import com.playernguyen.schedule.AuthesForceLogin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,13 +22,9 @@ public class PlayerJoinListener extends AuthesInstance implements Listener {
                 "Player %s (%s), registered: %s",
                 p.getName(), p.getUniqueId(), (account.isRegistered()) ? "Yes":"No"
         ));
-        // Create new task when not registered
-        if (!getAccountManager().getAccountFromUUID(p.getUniqueId()).isRegistered()) {
-            BukkitRunnable runnable = new ForceRegisterRunnable(p);
-            runnable.runTaskTimer(getInstance(), 20, 20);
-        } else {
-            // TODO force login
-        }
+        // Create new task to force player :)
+        BukkitRunnable runnable = new AuthesForceLogin(p);
+        runnable.runTaskTimer(getInstance(), 20, 20);
 
     }
 

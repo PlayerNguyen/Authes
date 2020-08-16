@@ -3,15 +3,13 @@ package com.playernguyen;
 import com.playernguyen.account.AccountManager;
 import com.playernguyen.account.SQLAccountManager;
 import com.playernguyen.account.SessionManager;
+import com.playernguyen.command.CommandLogin;
 import com.playernguyen.command.CommandManager;
 import com.playernguyen.command.CommandRegister;
 import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
-import com.playernguyen.listener.ListenerManager;
-import com.playernguyen.listener.PlayerInteractListener;
-import com.playernguyen.listener.PlayerJoinListener;
-import com.playernguyen.listener.PlayerMoveListener;
+import com.playernguyen.listener.*;
 import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
 import com.playernguyen.util.MySQLUtil;
@@ -53,10 +51,17 @@ public class Authes extends JavaPlugin {
         setupCommand();
     }
 
+    @Override
+    public void onDisable() {
+        // Session delete, for secure
+        getSessionManager().getContainer().clear();
+    }
+
     private void setupCommand() {
         this.commandManager = new CommandManager();
         // Append command
         commandManager.add(new CommandRegister());
+        commandManager.add(new CommandLogin());
 
         // Register command
         commandManager.forEach(e -> {
@@ -77,6 +82,7 @@ public class Authes extends JavaPlugin {
 
     private void setupSession() {
         sessionManager = new SessionManager();
+        // Request all player who don't have session to logged in
     }
 
     private void setupAccount() {
@@ -144,6 +150,7 @@ public class Authes extends JavaPlugin {
         getListenerManager().add(new PlayerJoinListener());
         getListenerManager().add(new PlayerMoveListener());
         getListenerManager().add(new PlayerInteractListener());
+        getListenerManager().add(new PlayerQuitListener());
         // Register listener
         getListenerManager().forEach(e
                 -> Bukkit.getServer().getPluginManager().registerEvents(e, this));

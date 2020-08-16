@@ -5,3 +5,7 @@ author: Player_Nguyen
 commands:
   register:
     usage: /register <password> <confirmPassword>
+    aliases: [register, reg, r]
+  login:
+    usage: /login <password>
+    aliases: [login, l]
