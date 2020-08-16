@@ -122,7 +122,8 @@ public class Authes extends JavaPlugin {
                                 "`username` VARCHAR(255) NOT NULL," +
                                 "`uuid` VARCHAR(255) NOT NULL," +
                                 "`hash` VARCHAR(255) NOT NULL," +
-                                "`email` VARCHAR(255) NOT NULL);",
+                                "`email` VARCHAR(255) NOT NULL DEFAULT ''" +
+                                ");",
                         getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT)
                 ));
                 // Execute

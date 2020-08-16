@@ -8,7 +8,10 @@ public enum LanguageFlag {
     KICK_REASON("kick-reason", "You has been kicked because not register/login"),
     NO_PERMISSION_COMMAND("no-permission-command", "You has no permission to do this"),
     ALREADY_REGISTERED("already-registered", "You are ready registered!"),
-    MISSING_REGISTER_COMMAND("missing-register-command", "Missing arguments: /register <password> <confirmPassword>")
+    MISSING_REGISTER_COMMAND("missing-register-command", "Missing arguments: /register <password> <confirmPassword>"),
+    NOT_MATCH_REGISTER("no-match-register", "Password doesn't match with confirm password"),
+    REGISTER_SUCCESS("register-success", "Register success."),
+    REGISTER_FAILED("register-failed", "Failed to register.")
     ;
 
     private final String path;

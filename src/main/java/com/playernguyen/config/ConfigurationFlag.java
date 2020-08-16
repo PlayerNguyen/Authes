@@ -8,7 +8,7 @@ public enum ConfigurationFlag {
     MYSQL_DATABASE("mysql.database", "authes"),
     MYSQL_PORT("mysql.port", "3306"),
     MYSQL_TABLE_ACCOUNT("mysql.table.account", "authes_account"),
-    OPTIONAL_BCRYPT_SALT ("settings.bcrypt.salt-round", 100),
+    OPTIONAL_BCRYPT_SALT ("settings.bcrypt.salt-round", 7),
 
     KICK_AFTER_LOGIN("settings.kick-after-login", 15)
     ;
