@@ -1,5 +1,6 @@
 package com.playernguyen.command;
 
+import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.config.LanguageFlag;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,10 +38,23 @@ public class CommandRegister extends CommandAbstract {
                 return CommandState.NOTHING;
             }
 
+            // Password checker
+            // Length
+            if (password.length() < getConfiguration().getInt(ConfigurationFlag.PASSWORD_MIN_SIZE)) {
+                player.sendMessage(getLanguage().get(LanguageFlag.PASSWORD_TOO_SHORT));
+                return CommandState.NOTHING;
+            }
+
             // Registering
             if (getSQLAccountManager().register(player.getUniqueId(), password)) {
-                // True
+                // Set the registered to true and message to player
                 player.sendMessage(getLanguage().get(LanguageFlag.REGISTER_SUCCESS));
+                getAccountManager().getAccountFromUUID(player.getUniqueId()).setRegistered(true);
+                // Auto login
+                if (getConfiguration().getBoolean(ConfigurationFlag.LOGIN_AFTER_REGISTER)) {
+                    getSessionManager().createSession(player.getUniqueId());
+                    player.sendMessage(getLanguage().get(LanguageFlag.LOGIN_SUCCESS));
+                }
             } else {
                 // False
                 player.sendMessage(getLanguage().get(LanguageFlag.REGISTER_FAILED));

@@ -9,8 +9,9 @@ public enum ConfigurationFlag {
     MYSQL_PORT("mysql.port", "3306"),
     MYSQL_TABLE_ACCOUNT("mysql.table.account", "authes_account"),
     OPTIONAL_BCRYPT_SALT ("settings.bcrypt.salt-round", 7),
-
-    KICK_AFTER_LOGIN("settings.kick-after-login", 15)
+    PASSWORD_MIN_SIZE("settings.password-min-size", 6),
+    KICK_AFTER_LOGIN("settings.kick-after-login", 15),
+    LOGIN_AFTER_REGISTER("settings.login-after-register", true)
     ;
 
     private final String path;

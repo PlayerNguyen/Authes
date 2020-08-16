@@ -16,6 +16,13 @@ public class PlayerQuitListener extends AuthesInstance implements Listener {
         if (getSessionManager().hasSession(player.getUniqueId())) {
             getSessionManager().removeSession(player.getUniqueId());
         }
+        // Clear account
+        if (getAccountManager().getAccountFromUUID(player.getUniqueId()) != null) {
+            getAccountManager()
+                    .getContainer()
+                    .remove(getAccountManager()
+                            .getAccountFromUUID(player.getUniqueId()));
+        }
     }
 
 }

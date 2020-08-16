@@ -16,7 +16,8 @@ public enum LanguageFlag {
     MISSING_LOGIN_COMMAND("missing-login-command", "&cMissing arguments: &6/login <password>"),
     LOGIN_SUCCESS("login-success", "&aLogin success"),
     LOGIN_FAIL("login-fail", "&cLogin fail!"),
-    WRONG_PASSWORD("wrong-password", "&cWrong password. Please try again!")
+    WRONG_PASSWORD("wrong-password", "&cWrong password. Please try again!"),
+    PASSWORD_TOO_SHORT("password-too-short", "&cYour password is too short, please try again with logger password")
     ;
 
     private final String path;

@@ -10,4 +10,6 @@ public interface Account {
 
     boolean isRegistered();
 
+    void setRegistered(boolean isRegistered);
+
 }

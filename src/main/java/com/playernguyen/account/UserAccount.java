@@ -7,7 +7,7 @@ import java.util.UUID;
 public class UserAccount implements Account {
 
     private final UUID uniqueId;
-    private final boolean isRegistered;
+    private boolean isRegistered;
     private String hash;
 
     public UserAccount(UUID uniqueId, boolean isRegistered) {
@@ -34,5 +34,9 @@ public class UserAccount implements Account {
     @Override
     public boolean isRegistered() {
         return isRegistered;
+    }
+
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
     }
 }

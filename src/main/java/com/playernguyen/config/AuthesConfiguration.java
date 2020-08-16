@@ -47,6 +47,10 @@ public class AuthesConfiguration extends AuthesInstance {
         return (int) getByFlag(flag);
     }
 
+    public boolean getBoolean(ConfigurationFlag flag) {
+        return (boolean) getByFlag(flag);
+    }
+
     public void save() throws IOException {
         this.fileConfiguration.save(this.file);
     }
