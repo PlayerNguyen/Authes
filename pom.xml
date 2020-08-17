@@ -53,6 +53,12 @@
             <version>0.4</version>
             <scope>compile</scope>
         </dependency>
+        <!-- mail -->
+        <dependency>
+            <groupId>org.simplejavamail</groupId>
+            <artifactId>simple-java-mail</artifactId>
+            <version>6.4.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -77,7 +83,26 @@
                         </configuration>
                     </execution>
                 </executions>
-
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>org.simplejavamail</groupId>
+                            <artifactId>simple-java-mail</artifactId>
+                            <version>6.4.3</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}\lib\simple-java-mail-6.4.3.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

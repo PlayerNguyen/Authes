@@ -46,14 +46,14 @@ public class CommandRegister extends CommandAbstract {
             }
 
             // Registering
-            if (getSQLAccountManager().register(player.getUniqueId(), password)) {
+            if (getSQLAccountManager().register(player, player.getUniqueId(), password)) {
                 // Set the registered to true and message to player
                 player.sendMessage(getLanguage().get(LanguageFlag.REGISTER_SUCCESS));
                 getAccountManager().getAccountFromUUID(player.getUniqueId()).setRegistered(true);
                 // Auto login
                 if (getConfiguration().getBoolean(ConfigurationFlag.LOGIN_AFTER_REGISTER)) {
                     if (getSessionManager().createSession(player.getUniqueId())
-                            && getSQLAccountManager().setLogged(player.getUniqueId(), true)) {
+                            && getSQLAccountManager().setLogged(player, player.getUniqueId(), true)) {
                         player.sendMessage(getLanguage().get(LanguageFlag.LOGIN_SUCCESS));
                     } else {
                         player.sendMessage(getLanguage().get(LanguageFlag.LOGIN_FAIL));

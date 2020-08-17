@@ -4,12 +4,15 @@ import com.playernguyen.AuthesInstance;
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.util.ResultFetcher;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SQLAccountManager extends AuthesInstance {
@@ -67,19 +70,24 @@ public class SQLAccountManager extends AuthesInstance {
         return null;
     }
 
-    public boolean register(UUID uuid, String plaintext) {
+    public boolean register(Player player, UUID uuid, String plaintext) {
         try (Connection connection = getEstablishment().openConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    String.format("INSERT INTO `%s` (`username`, `uuid`, `hash`) VALUES (?,?,?)", tableName)
+                    String.format("INSERT INTO `%s` (`username`, `uuid`, `hash`, `address`, `lastLogin`) " +
+                            "VALUES (?,?,?, ?, ?)", tableName)
             );
             // Handle information
             String name = Bukkit.getOfflinePlayer(uuid).getName();
             String hash = BCrypt.hashpw(plaintext, BCrypt.gensalt(getConfiguration()
                     .getInt(ConfigurationFlag.OPTIONAL_BCRYPT_SALT)));
+            String address = Objects.requireNonNull(player.getAddress()).getAddress().toString();
+            String lastLogged = String.valueOf(System.currentTimeMillis());
             // Set parameters
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, uuid.toString());
             preparedStatement.setString(3, hash);
+            preparedStatement.setString(4, address);
+            preparedStatement.setString(5, lastLogged);
             // Execute
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException e) {
@@ -125,16 +133,18 @@ public class SQLAccountManager extends AuthesInstance {
         return false;
     }
 
-    public boolean setLogged(UUID uuid, boolean b) {
+    public boolean setLogged(Player player, UUID uuid, boolean b) {
         try (Connection connection = getEstablishment().openConnection()) {
             // Prepare statement
             PreparedStatement preparedStatement = connection.prepareStatement(String.format(
-                    "UPDATE `%s` SET `isLogged`=? WHERE `uuid`=?",
+                    "UPDATE `%s` SET `isLogged`=?, `lastLogin`=?, `address`=? WHERE `uuid`=?",
                     tableName
             ));
             // Parameters
             preparedStatement.setInt(1, (b) ? 1 : 0);
-            preparedStatement.setString(2, uuid.toString());
+            preparedStatement.setString(2, String.valueOf(System.currentTimeMillis()));
+            preparedStatement.setString(3, Objects.requireNonNull(player.getAddress()).toString());
+            preparedStatement.setString(4, uuid.toString());
             // Update
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException e) {

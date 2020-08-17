@@ -30,6 +30,9 @@ public class CommandChangeEmail extends CommandAbstract {
                 return CommandState.NOTHING;
             }
 
+            // Check whether the email has existed or not
+
+
             // Change email
             if (!getSQLAccountManager().changeEmail(((Player) sender).getUniqueId(), plainEmail)) {
                 sender.sendMessage(getLanguage().get(LanguageFlag.CHANGE_EMAIL_FAIL));

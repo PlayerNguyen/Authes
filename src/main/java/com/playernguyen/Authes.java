@@ -16,11 +16,15 @@ import com.playernguyen.util.MySQLUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.simplejavamail.api.mailer.Mailer;
+import org.simplejavamail.api.mailer.config.TransportStrategy;
+import org.simplejavamail.mailer.MailerBuilder;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class Authes extends JavaPlugin {
 
@@ -33,6 +37,7 @@ public class Authes extends JavaPlugin {
     private SessionManager sessionManager;
     private AuthesLanguage authesLanguage;
     private CommandManager commandManager;
+    private Mailer mailer;
 
     @Override
     public void onEnable() {
@@ -49,6 +54,26 @@ public class Authes extends JavaPlugin {
         setupSession();
         // Set up command
         setupCommand();
+        // Set up resource
+        setupResource();
+        // Set up mail services
+        setupMail();
+    }
+
+    private void setupMail() {
+        // Initial the mail service
+        mailer = MailerBuilder
+                .withSMTPServer(
+                        getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_HOST),
+                        Integer.valueOf(getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_PORT)),
+                        getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_USERNAME),
+                        getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_PASSWORD)
+                )
+                .withTransportStrategy(TransportStrategy.SMTP_TLS)
+                .async()
+                .withSessionTimeout(10 * 1000)
+                .buildMailer();
+
     }
 
     @Override
@@ -140,7 +165,9 @@ public class Authes extends JavaPlugin {
                                 "`uuid` VARCHAR(255) NOT NULL," +
                                 "`hash` VARCHAR(255) NOT NULL," +
                                 "`email` VARCHAR(255) NOT NULL DEFAULT ''," +
-                                "`isLogged` VARCHAR(255) NOT NULL DEFAULT '0');",
+                                "`isLogged` VARCHAR(255) NOT NULL DEFAULT '0'," +
+                                "`address` VARCHAR(255) NOT NULL," +
+                                "`lastLogin` VARCHAR(255) NOT NULL);",
                         getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT)
                 ));
                 // Execute
@@ -165,6 +192,25 @@ public class Authes extends JavaPlugin {
         // Register listener
         getListenerManager().forEach(e
                 -> Bukkit.getServer().getPluginManager().registerEvents(e, this));
+    }
+
+    private void setupResource() {
+        // email.html
+        InputStream resource = this.getResource("email.html");
+        File file = new File(getDataFolder(), "email.html");
+        try {
+            if (!file.exists() && file.createNewFile()) {
+                FileWriter writer = new FileWriter(file);
+                assert resource != null;
+                Scanner scanner = new Scanner(resource);
+                while (scanner.hasNext()) {
+                    writer.write(scanner.next());
+                }
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ListenerManager getListenerManager() {

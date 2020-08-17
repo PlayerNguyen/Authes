@@ -15,3 +15,9 @@ commands:
   changepassword:
     usage: /changepassword <oldPassword> <newPassword> <confirmPassword>
     aliases: [changepassword, cp, cpass]
+  recoverypassword:
+    usage: /recoverypassword <recoveryCode> <newPassword> <renewPassword>
+    aliases: [recoverypassword, rp, rpass]
+  forgotpassword:
+    usage: /forgotpassword
+    aliases: [forgotpassword, fp, fpass]
