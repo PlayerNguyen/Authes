@@ -43,8 +43,10 @@ public class CommandRecoveryPassword extends CommandAbstract {
                 return CommandState.NOTHING;
             }
 
+            getSQLAccountManager().regenerateRecoveryKey(player.getUniqueId());
             player.sendMessage(getLanguage().get(LanguageFlag.CHANGE_PASSWORD_SUCCESS));
 
+            return CommandState.NOTHING;
         }
 
         return CommandState.INVALID_SENDER;

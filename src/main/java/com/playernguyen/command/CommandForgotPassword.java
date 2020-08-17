@@ -23,8 +23,11 @@ public class CommandForgotPassword extends CommandAbstract {
             Player player = (Player) sender;
             Bukkit.getScheduler().runTaskAsynchronously(getInstance(), () -> {
                 try {
+                    getSQLAccountManager().regenerateRecoveryKey(player.getUniqueId());
                     getMailSender().sendRecoveryMail(player.getUniqueId());
                     player.sendMessage(getLanguage().get(LanguageFlag.RECOVERY_PASSWORD_SENT));
+
+                    Bukkit.getScheduler().runTask(getInstance(), () -> player.kickPlayer(getLanguage().get(LanguageFlag.RECOVERY_PASSWORD_SENT)));
                 } catch (EmailException | IOException e) {
                     e.printStackTrace();
                 }

@@ -213,4 +213,22 @@ public class SQLAccountManager extends AuthesInstance {
         return null;
     }
 
+    public boolean regenerateRecoveryKey(UUID uuid) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            // Prepare
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "UPDATE `%s` SET `recoveryKey`=? WHERE `uuid`=?",
+                    tableName
+            ));
+            // Parameters
+            preparedStatement.setString(1, NumberGenerator.generate(6));
+            preparedStatement.setString(2, uuid.toString());
+            // Execute and return
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
