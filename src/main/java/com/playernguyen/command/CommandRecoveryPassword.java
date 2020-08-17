@@ -1,6 +1,8 @@
 package com.playernguyen.command;
 
+import com.playernguyen.config.LanguageFlag;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -12,7 +14,40 @@ public class CommandRecoveryPassword extends CommandAbstract {
 
     @Override
     public CommandState onCommand(CommandSender sender, List<String> arguments) {
-        return null;
+
+        if (sender instanceof Player) {
+            Player player = ((Player) sender);
+            if (arguments.size() < 3) {
+                showHelp(sender);
+                return CommandState.NOTHING;
+            }
+
+            // Verify the key code
+            String recovery = arguments.get(0);
+            String password = arguments.get(1);
+            String rePassword = arguments.get(2);
+            if (!getSQLAccountManager().validRecoveryKey(player.getUniqueId(), recovery)) {
+                player.sendMessage(getLanguage().get(LanguageFlag.RECOVERY_CODE_INVALID));
+                return CommandState.NOTHING;
+            }
+
+            // Matching
+            if (!password.equalsIgnoreCase(rePassword)) {
+                player.sendMessage(getLanguage().get(LanguageFlag.PASSWORD_NOT_MATCH));
+                return CommandState.NOTHING;
+            }
+
+            // Fail to change password
+            if (!getSQLAccountManager().changePassword(player.getUniqueId(), password)) {
+                player.sendMessage(getLanguage().get(LanguageFlag.CHANGE_PASSWORD_FAIL));
+                return CommandState.NOTHING;
+            }
+
+            player.sendMessage(getLanguage().get(LanguageFlag.CHANGE_PASSWORD_SUCCESS));
+
+        }
+
+        return CommandState.INVALID_SENDER;
     }
 
     @Override

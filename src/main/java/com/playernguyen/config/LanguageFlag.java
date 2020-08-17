@@ -8,7 +8,7 @@ public enum LanguageFlag {
     NO_PERMISSION_COMMAND("no-permission-command", "&cYou has no permission to do this"),
     ALREADY_REGISTERED("already-registered", "&cYou are ready registered!"),
     MISSING_REGISTER_COMMAND("missing-register-command", "&cMissing arguments: &6/register <password> <confirmPassword>"),
-    NOT_MATCH_REGISTER("no-match-register", "&cPassword doesn't match with confirm password"),
+    PASSWORD_NOT_MATCH("password-not-match", "&cPassword doesn't match with confirm password"),
     REGISTER_SUCCESS("register-success", "&aRegister success."),
     REGISTER_FAILED("register-failed", "&cFailed to register."),
     INVALID_SENDER("invalid-sender", "&cYou cannot use this command on console/remote!"),
@@ -24,7 +24,9 @@ public enum LanguageFlag {
             " /fogotpassword will use your current email"),
     ALREADY_LOGGED_IN("already-logged-in", "&cYou are logged in, don't need to re-login."),
     CHANGE_PASSWORD_FAIL("change-password-fail", "&cFailed to change password, please content to admin."),
-    CHANGE_PASSWORD_SUCCESS("change-password-success", "&aSucceeded to change password")
+    CHANGE_PASSWORD_SUCCESS("change-password-success", "&aSucceeded to change password"),
+    RECOVERY_PASSWORD_SENT("recovery-password-sent", "&6Recovery password has sent to your mail!"),
+    RECOVERY_CODE_INVALID("recovery-code-invalid", "&cRecovery code's invalid!"),
     ;
 
     private final String path;

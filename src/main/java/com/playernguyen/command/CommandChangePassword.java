@@ -39,7 +39,7 @@ public class CommandChangePassword extends CommandAbstract{
 
             // Matching confirm
             if (!(newPassword.equalsIgnoreCase(confirmPassword))) {
-                player.sendMessage(getLanguage().get(LanguageFlag.NOT_MATCH_REGISTER));
+                player.sendMessage(getLanguage().get(LanguageFlag.PASSWORD_NOT_MATCH));
                 return CommandState.NOTHING;
             }
 

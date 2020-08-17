@@ -34,7 +34,7 @@ public class CommandRegister extends CommandAbstract {
             String password = arguments.get(0);
             String confirmPassword = arguments.get(1);
             if (!password.equalsIgnoreCase(confirmPassword)) {
-                player.sendMessage(getLanguage().get(LanguageFlag.NOT_MATCH_REGISTER));
+                player.sendMessage(getLanguage().get(LanguageFlag.PASSWORD_NOT_MATCH));
                 return CommandState.NOTHING;
             }
 

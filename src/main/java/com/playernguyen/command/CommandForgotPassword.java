@@ -1,8 +1,12 @@
 package com.playernguyen.command;
 
+import com.playernguyen.config.LanguageFlag;
+import org.apache.commons.mail.EmailException;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.List;
 
 public class CommandForgotPassword extends CommandAbstract {
@@ -16,7 +20,15 @@ public class CommandForgotPassword extends CommandAbstract {
 
         if (sender instanceof Player) {
 
-
+            Player player = (Player) sender;
+            Bukkit.getScheduler().runTaskAsynchronously(getInstance(), () -> {
+                try {
+                    getMailSender().sendRecoveryMail(player.getUniqueId());
+                    player.sendMessage(getLanguage().get(LanguageFlag.RECOVERY_PASSWORD_SENT));
+                } catch (EmailException | IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
             return CommandState.NOTHING;
         }

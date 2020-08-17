@@ -9,22 +9,22 @@ import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.listener.*;
+import com.playernguyen.mail.MailSender;
 import com.playernguyen.schedule.AuthesForceLogin;
 import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
+import com.playernguyen.util.FileUtils;
 import com.playernguyen.util.MySQLUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.simplejavamail.api.mailer.Mailer;
-import org.simplejavamail.api.mailer.config.TransportStrategy;
-import org.simplejavamail.mailer.MailerBuilder;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class Authes extends JavaPlugin {
 
@@ -37,7 +37,7 @@ public class Authes extends JavaPlugin {
     private SessionManager sessionManager;
     private AuthesLanguage authesLanguage;
     private CommandManager commandManager;
-    private Mailer mailer;
+    private MailSender mailSender;
 
     @Override
     public void onEnable() {
@@ -61,19 +61,7 @@ public class Authes extends JavaPlugin {
     }
 
     private void setupMail() {
-        // Initial the mail service
-        mailer = MailerBuilder
-                .withSMTPServer(
-                        getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_HOST),
-                        Integer.valueOf(getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_PORT)),
-                        getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_USERNAME),
-                        getConfiguration().getString(ConfigurationFlag.EMAIL_SMTP_PASSWORD)
-                )
-                .withTransportStrategy(TransportStrategy.SMTP_TLS)
-                .async()
-                .withSessionTimeout(10 * 1000)
-                .buildMailer();
-
+        this.mailSender = new MailSender();
     }
 
     @Override
@@ -89,6 +77,8 @@ public class Authes extends JavaPlugin {
         commandManager.add(new CommandLogin());
         commandManager.add(new CommandChangeEmail());
         commandManager.add(new CommandChangePassword());
+        commandManager.add(new CommandForgotPassword());
+        commandManager.add(new CommandRecoveryPassword());
         // Register command
         commandManager.forEach(e -> {
             String command = e.getCommand();
@@ -156,7 +146,10 @@ public class Authes extends JavaPlugin {
             this.getLogger().info("Success connect to the MySQL server");
             // Initial the table
             // If not found account table. Initial one
-            if (!MySQLUtil.hasTable(connection, getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT))) {
+            if (!MySQLUtil.hasTable(connection,
+                    getConfiguration().getString(ConfigurationFlag.MYSQL_PREFIX) +
+                            getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT))
+            ) {
                 this.getLogger().info("Not found account table. Create the new one...");
                 // Create account table. Which storage all players information
                 PreparedStatement preparedStatement = connection.prepareStatement(String.format(
@@ -167,7 +160,9 @@ public class Authes extends JavaPlugin {
                                 "`email` VARCHAR(255) NOT NULL DEFAULT ''," +
                                 "`isLogged` VARCHAR(255) NOT NULL DEFAULT '0'," +
                                 "`address` VARCHAR(255) NOT NULL," +
-                                "`lastLogin` VARCHAR(255) NOT NULL);",
+                                "`lastLogin` VARCHAR(255) NOT NULL, " +
+                                "`recoveryKey` VARCHAR(255) NOT NULL);",
+                        getConfiguration().getString(ConfigurationFlag.MYSQL_PREFIX) +
                         getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT)
                 ));
                 // Execute
@@ -200,13 +195,8 @@ public class Authes extends JavaPlugin {
         File file = new File(getDataFolder(), "email.html");
         try {
             if (!file.exists() && file.createNewFile()) {
-                FileWriter writer = new FileWriter(file);
                 assert resource != null;
-                Scanner scanner = new Scanner(resource);
-                while (scanner.hasNext()) {
-                    writer.write(scanner.next());
-                }
-                writer.close();
+                FileUtils.resourceToFile(resource, file);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -247,5 +237,9 @@ public class Authes extends JavaPlugin {
 
     public static Authes getInstance() {
         return instance;
+    }
+
+    public MailSender getMailSender() {
+        return mailSender;
     }
 }

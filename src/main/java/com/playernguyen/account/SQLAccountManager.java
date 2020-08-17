@@ -2,12 +2,12 @@ package com.playernguyen.account;
 
 import com.playernguyen.AuthesInstance;
 import com.playernguyen.config.ConfigurationFlag;
+import com.playernguyen.util.NumberGenerator;
 import com.playernguyen.util.ResultFetcher;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +20,8 @@ public class SQLAccountManager extends AuthesInstance {
     private final String tableName;
 
     public SQLAccountManager() {
-        this.tableName = getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT);
+        this.tableName = getConfiguration().getString(ConfigurationFlag.MYSQL_PREFIX) +
+                getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT);
     }
 
     /**
@@ -73,8 +74,8 @@ public class SQLAccountManager extends AuthesInstance {
     public boolean register(Player player, UUID uuid, String plaintext) {
         try (Connection connection = getEstablishment().openConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    String.format("INSERT INTO `%s` (`username`, `uuid`, `hash`, `address`, `lastLogin`) " +
-                            "VALUES (?,?,?, ?, ?)", tableName)
+                    String.format("INSERT INTO `%s` (`username`, `uuid`, `hash`, `address`, `lastLogin`, `recoveryKey`) " +
+                            "VALUES (?,?,?,?,?,?)", tableName)
             );
             // Handle information
             String name = Bukkit.getOfflinePlayer(uuid).getName();
@@ -88,6 +89,7 @@ public class SQLAccountManager extends AuthesInstance {
             preparedStatement.setString(3, hash);
             preparedStatement.setString(4, address);
             preparedStatement.setString(5, lastLogged);
+            preparedStatement.setString(6, NumberGenerator.generate(6));
             // Execute
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException e) {
@@ -171,6 +173,44 @@ public class SQLAccountManager extends AuthesInstance {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public String getRecoveryKey(UUID uuid) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "SELECT * FROM `%s` WHERE `uuid`=?",
+                    tableName
+            ));
+            // Set the parameter
+            preparedStatement.setString(1, uuid.toString());
+            ResultFetcher resultFetcher = new ResultFetcher(preparedStatement.executeQuery());
+            // Return
+            return (String) resultFetcher.first().get("recoveryKey");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean validRecoveryKey(UUID uuid, String recoveryKey) {
+        return getRecoveryKey(uuid).equalsIgnoreCase(recoveryKey);
+    }
+
+    public String getEmail(UUID uuid) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "SELECT * FROM `%s` WHERE `uuid`=?",
+                    tableName
+            ));
+            // Set the parameter
+            preparedStatement.setString(1, uuid.toString());
+            ResultFetcher resultFetcher = new ResultFetcher(preparedStatement.executeQuery());
+            // Return
+            return (String) resultFetcher.first().get("email");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

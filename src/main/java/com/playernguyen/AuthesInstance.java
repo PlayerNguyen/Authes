@@ -5,6 +5,7 @@ import com.playernguyen.account.SQLAccountManager;
 import com.playernguyen.account.SessionManager;
 import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
+import com.playernguyen.mail.MailSender;
 import com.playernguyen.sql.SQLEstablishment;
 
 public abstract class AuthesInstance {
@@ -35,6 +36,10 @@ public abstract class AuthesInstance {
 
     protected AuthesLanguage getLanguage() {
         return getInstance().getLanguage();
+    }
+
+    protected MailSender getMailSender() {
+        return getInstance().getMailSender();
     }
 
 }
