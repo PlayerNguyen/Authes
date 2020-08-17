@@ -11,8 +11,8 @@ public class PlayerMoveListener extends AuthesInstance implements Listener {
     @EventHandler
     public void onMoveListen(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (!getAccountManager().getAccountFromUUID(player.getUniqueId()).isRegistered()) {
-
+        if (!getAccountManager().getAccountFromUUID(player.getUniqueId()).isRegistered()
+            || !getSessionManager().hasSession(player.getUniqueId())) {
             event.setCancelled(true);
         }
     }

@@ -100,6 +100,7 @@ public class SQLAccountManager extends AuthesInstance {
             ResultFetcher resultFetcher = new ResultFetcher(preparedStatement.executeQuery());
             // Handle hash check
             String hash = (String) resultFetcher.first().get("hash");
+
             return BCrypt.checkpw(plaintext, hash);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -114,10 +115,48 @@ public class SQLAccountManager extends AuthesInstance {
                     "UPDATE `%s` SET `email`=? WHERE `uuid`=?",
                     tableName
             ));
-            // Parameter set
+            // Parameters set
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, uuid.toString());
             // Execute
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setLogged(UUID uuid, boolean b) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            // Prepare statement
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "UPDATE `%s` SET `isLogged`=? WHERE `uuid`=?",
+                    tableName
+            ));
+            // Parameters
+            preparedStatement.setInt(1, (b) ? 1 : 0);
+            preparedStatement.setString(2, uuid.toString());
+            // Update
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean changePassword(UUID uuid, String plaintext) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            // Prepare
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "UPDATE `%s` SET `hash`=? WHERE `uuid`=?",
+                    tableName
+            ));
+            // Parameters
+            String hash = BCrypt.hashpw(plaintext, BCrypt.gensalt(getConfiguration()
+                    .getInt(ConfigurationFlag.OPTIONAL_BCRYPT_SALT)));
+            preparedStatement.setString(1, hash);
+            preparedStatement.setString(2, uuid.toString());
+            // Execute and return
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -61,7 +61,6 @@ public class AuthesForceLogin extends AuthesRunnable {
             return;
         }
 
-        this.getPlayer().sendMessage(getLanguage().get(LanguageFlag.LOGIN_SUCCESS));
         this.cancel();
     }
 }

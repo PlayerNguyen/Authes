@@ -12,6 +12,7 @@ import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.listener.*;
+import com.playernguyen.schedule.AuthesForceLogin;
 import com.playernguyen.sql.MySQLEstablishment;
 import com.playernguyen.sql.SQLEstablishment;
 import com.playernguyen.util.MySQLUtil;
@@ -95,6 +96,10 @@ public class Authes extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach( player -> {
             Account account = getSQLAccountManager().getAccount(player.getUniqueId());
             getAccountManager().add(account);
+
+            // Authes force login run
+            AuthesForceLogin forceLogin = new AuthesForceLogin(player);
+            forceLogin.runTaskTimer(this, 20, 20);
         });
     }
 
@@ -136,8 +141,8 @@ public class Authes extends JavaPlugin {
                                 "`username` VARCHAR(255) NOT NULL," +
                                 "`uuid` VARCHAR(255) NOT NULL," +
                                 "`hash` VARCHAR(255) NOT NULL," +
-                                "`email` VARCHAR(255) NOT NULL DEFAULT ''" +
-                                ");",
+                                "`email` VARCHAR(255) NOT NULL DEFAULT ''," +
+                                "`isLogged` VARCHAR(255) NOT NULL DEFAULT '0');",
                         getConfiguration().getString(ConfigurationFlag.MYSQL_TABLE_ACCOUNT)
                 ));
                 // Execute

@@ -43,7 +43,9 @@ public class CommandLogin extends CommandAbstract {
             }
 
             // Create session
-            if (getSessionManager().createSession(player.getUniqueId())) {
+            if (getSessionManager().createSession(player.getUniqueId())
+            && getSQLAccountManager().setLogged(player.getUniqueId(), true)) {
+
                 player.sendMessage(getLanguage().get(LanguageFlag.LOGIN_SUCCESS));
             } else {
                 player.sendMessage(getLanguage().get(LanguageFlag.LOGIN_FAIL));

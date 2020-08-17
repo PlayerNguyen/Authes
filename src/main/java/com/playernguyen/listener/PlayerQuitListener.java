@@ -23,6 +23,8 @@ public class PlayerQuitListener extends AuthesInstance implements Listener {
                     .remove(getAccountManager()
                             .getAccountFromUUID(player.getUniqueId()));
         }
+        // Set logged
+        getSQLAccountManager().setLogged(player.getUniqueId(), false);
     }
 
 }

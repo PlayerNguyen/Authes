@@ -11,7 +11,8 @@ public class PlayerInteractListener extends AuthesInstance implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!getAccountManager().getAccountFromUUID(player.getUniqueId()).isRegistered()) {
+        if (!getAccountManager().getAccountFromUUID(player.getUniqueId()).isRegistered()
+        || !getSessionManager().hasSession(player.getUniqueId())) {
 
             event.setCancelled(true);
         }
