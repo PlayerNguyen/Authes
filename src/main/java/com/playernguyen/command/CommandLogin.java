@@ -10,7 +10,7 @@ import java.util.List;
 public class CommandLogin extends CommandAbstract {
 
     public CommandLogin() {
-        super("login");
+        super("login", "<password>", "Login into server");
     }
 
     @Override

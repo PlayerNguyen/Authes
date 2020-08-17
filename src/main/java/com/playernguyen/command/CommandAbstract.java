@@ -78,7 +78,7 @@ public abstract class CommandAbstract extends AuthesInstance implements TabExecu
     }
 
     public String buildHelp() {
-        return ChatColor.GOLD + command + " " + ChatColor.LIGHT_PURPLE + parameter + ": " + ChatColor.GRAY + description;
+        return ChatColor.GOLD  + " /"+ command + " " + ChatColor.LIGHT_PURPLE + parameter + ": " + ChatColor.GRAY + description;
     }
 
     public void showHelp(CommandSender sender){

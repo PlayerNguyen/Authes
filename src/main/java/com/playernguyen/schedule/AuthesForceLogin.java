@@ -22,19 +22,26 @@ public class AuthesForceLogin extends AuthesRunnable {
     public void run() {
         this.ticker --;
         if (player != null) {
+            if (getAccountManager().getAccountFromUUID(getPlayer().getUniqueId()) == null) {
+                this.cancel();
+                return;
+            }
             // Handle information of login/register
             if (!getAccountManager().getAccountFromUUID(getPlayer().getUniqueId()).isRegistered()) {
                 // Anti spam
                 if (ticker % 2 == 0) {
                     this.getPlayer().sendMessage(getLanguage().get(LanguageFlag.REQUIRE_REGISTER));
+                    return;
                 }
             } else if (!getSessionManager().hasSession(player.getUniqueId())) {
                 if (ticker % 2 == 0) {
                     this.getPlayer().sendMessage(getLanguage().get(LanguageFlag.REQUIRE_LOGIN));
+                    return;
                 }
             } else {
                 this.cancel();
                 this.getPlayer().sendMessage(getLanguage().get(LanguageFlag.LOGIN_SUCCESS));
+                return;
             }
 
             // If out of time (idle), kick player

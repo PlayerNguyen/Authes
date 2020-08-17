@@ -10,7 +10,7 @@ import java.util.List;
 public class CommandRegister extends CommandAbstract {
 
     public CommandRegister() {
-        super("register");
+        super("register", "<password> <confirmPassword>", "Register an account");
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandChangeEmail extends CommandAbstract {
     public CommandChangeEmail() {
-        super("changeemail", "<email>");
+        super("changeemail", "<email>", "Change current email");
     }
 
     @Override
