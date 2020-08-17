@@ -1,8 +1,10 @@
 package com.playernguyen;
 
+import com.playernguyen.account.Account;
 import com.playernguyen.account.AccountManager;
 import com.playernguyen.account.SQLAccountManager;
 import com.playernguyen.account.SessionManager;
+import com.playernguyen.command.CommandChangeEmail;
 import com.playernguyen.command.CommandLogin;
 import com.playernguyen.command.CommandManager;
 import com.playernguyen.command.CommandRegister;
@@ -62,7 +64,7 @@ public class Authes extends JavaPlugin {
         // Append command
         commandManager.add(new CommandRegister());
         commandManager.add(new CommandLogin());
-
+        commandManager.add(new CommandChangeEmail());
         // Register command
         commandManager.forEach(e -> {
             String command = e.getCommand();
@@ -88,6 +90,12 @@ public class Authes extends JavaPlugin {
     private void setupAccount() {
         this.SQLAccountManager = new SQLAccountManager();
         this.accountManager = new AccountManager();
+
+        // Which /reload, add all online player :)
+        Bukkit.getOnlinePlayers().forEach( player -> {
+            Account account = getSQLAccountManager().getAccount(player.getUniqueId());
+            getAccountManager().add(account);
+        });
     }
 
     private void setupConfiguration() {

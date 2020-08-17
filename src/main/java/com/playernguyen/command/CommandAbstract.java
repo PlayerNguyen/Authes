@@ -2,6 +2,7 @@ package com.playernguyen.command;
 
 import com.playernguyen.AuthesInstance;
 import com.playernguyen.config.LanguageFlag;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -12,9 +13,25 @@ import java.util.List;
 public abstract class CommandAbstract extends AuthesInstance implements TabExecutor {
 
     private final String command;
+    private final String parameter;
+    private final String description;
 
     public CommandAbstract(String command) {
         this.command = command;
+        this.parameter = "";
+        this.description = "";
+    }
+
+    public CommandAbstract(String command, String parameter) {
+        this.command = command;
+        this.parameter = parameter;
+        this.description = "";
+    }
+
+    public CommandAbstract(String command, String parameter, String description) {
+        this.command = command;
+        this.parameter = parameter;
+        this.description = description;
     }
 
     public String getCommand() {
@@ -58,5 +75,13 @@ public abstract class CommandAbstract extends AuthesInstance implements TabExecu
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         return onTab(sender, Arrays.asList(args));
+    }
+
+    public String buildHelp() {
+        return ChatColor.GOLD + command + " " + ChatColor.LIGHT_PURPLE + parameter + ": " + ChatColor.GRAY + description;
+    }
+
+    public void showHelp(CommandSender sender){
+        sender.sendMessage(buildHelp());
     }
 }

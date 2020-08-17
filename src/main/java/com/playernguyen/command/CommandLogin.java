@@ -23,6 +23,11 @@ public class CommandLogin extends CommandAbstract {
                 player.sendMessage(getLanguage().get(LanguageFlag.NOT_REGISTER));
                 return CommandState.NOTHING;
             }
+            // If already login
+            if (getSessionManager().hasSession(player.getUniqueId())) {
+                player.sendMessage(getLanguage().get(LanguageFlag.ALREADY_LOGGED_IN));
+                return CommandState.NOTHING;
+            }
             // Not enough condition
             // Arguments
             if (arguments.size() < 1) {

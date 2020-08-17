@@ -9,3 +9,6 @@ commands:
   login:
     usage: /login <password>
     aliases: [login, l]
+  changeemail:
+    usage: /changeemail <email>
+    aliases: [changeemail, cemail, ce]

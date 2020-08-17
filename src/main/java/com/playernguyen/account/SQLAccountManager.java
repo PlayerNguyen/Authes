@@ -107,4 +107,22 @@ public class SQLAccountManager extends AuthesInstance {
         return false;
     }
 
+    public boolean changeEmail(UUID uuid, String email) {
+        try (Connection connection = getEstablishment().openConnection()) {
+            // Prepare statement
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                    "UPDATE `%s` SET `email`=? WHERE `uuid`=?",
+                    tableName
+            ));
+            // Parameter set
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, uuid.toString());
+            // Execute
+            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

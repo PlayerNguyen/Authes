@@ -17,7 +17,12 @@ public enum LanguageFlag {
     LOGIN_SUCCESS("login-success", "&aLogin success"),
     LOGIN_FAIL("login-fail", "&cLogin fail!"),
     WRONG_PASSWORD("wrong-password", "&cWrong password. Please try again!"),
-    PASSWORD_TOO_SHORT("password-too-short", "&cYour password is too short, please try again with logger password")
+    PASSWORD_TOO_SHORT("password-too-short", "&cYour password is too short, please try again with logger password"),
+    INVALID_EMAIL_FORMAT("invalid-email-format", "&cInvalid email format, please try again"),
+    CHANGE_EMAIL_FAIL("change-email-fail", "&cFailed to change email, contact to admin for more"),
+    CHANGE_EMAIL_SUCCESS("change-email-success", "&aSucceeded to change email," +
+            " /fogotpassword will use your current email"),
+    ALREADY_LOGGED_IN("already-logged-in", "&cYou are logged in, don't need to re-login.")
     ;
 
     private final String path;
