@@ -22,7 +22,9 @@ public enum LanguageFlag {
     CHANGE_EMAIL_FAIL("change-email-fail", "&cFailed to change email, contact to admin for more"),
     CHANGE_EMAIL_SUCCESS("change-email-success", "&aSucceeded to change email," +
             " /fogotpassword will use your current email"),
-    ALREADY_LOGGED_IN("already-logged-in", "&cYou are logged in, don't need to re-login.")
+    ALREADY_LOGGED_IN("already-logged-in", "&cYou are logged in, don't need to re-login."),
+    CHANGE_PASSWORD_FAIL("change-password-fail", "&cFailed to change password, please content to admin."),
+    CHANGE_PASSWORD_SUCCESS("change-password-success", "&aSucceeded to change password")
     ;
 
     private final String path;

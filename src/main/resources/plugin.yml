@@ -12,3 +12,6 @@ commands:
   changeemail:
     usage: /changeemail <email>
     aliases: [changeemail, cemail, ce]
+  changepassword:
+    usage: /changepassword <oldPassword> <newPassword> <confirmPassword>
+    aliases: [changepassword, cp, cpass]

@@ -23,6 +23,14 @@ public class AuthesForceLogin extends AuthesRunnable {
         // Update tick
         this.ticker --;
 
+        // If out of time (idle), kick player
+        if (ticker <= 0) {
+            this.getPlayer().kickPlayer(this.getLanguage().get(LanguageFlag.KICK_REASON));
+            // Cancel the task too
+            this.cancel();
+            return;
+        }
+
         // Player not found
         if (player == null) {
             this.cancel();
@@ -50,14 +58,6 @@ public class AuthesForceLogin extends AuthesRunnable {
                 this.getPlayer().sendMessage(getLanguage().get(LanguageFlag.REQUIRE_LOGIN));
 
             }
-            return;
-        }
-
-        // If out of time (idle), kick player
-        if (ticker <= 0) {
-            this.getPlayer().kickPlayer(this.getLanguage().get(LanguageFlag.KICK_REASON));
-            // Cancel the task too
-            this.cancel();
             return;
         }
 

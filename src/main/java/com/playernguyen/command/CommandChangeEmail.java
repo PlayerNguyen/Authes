@@ -40,7 +40,7 @@ public class CommandChangeEmail extends CommandAbstract {
 
         }
 
-        return CommandState.NOTHING;
+        return CommandState.INVALID_SENDER;
     }
 
     @Override

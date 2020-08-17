@@ -37,7 +37,7 @@ public class CommandLogin extends CommandAbstract {
 
             String plainPassword = arguments.get(0);
             // Wrong password
-            if (!getSQLAccountManager().login(player, plainPassword)) {
+            if (!getSQLAccountManager().login(player.getUniqueId(), plainPassword)) {
                 player.sendMessage(getLanguage().get(LanguageFlag.WRONG_PASSWORD));
                 return CommandState.NOTHING;
             }
@@ -52,7 +52,7 @@ public class CommandLogin extends CommandAbstract {
             }
             return CommandState.NOTHING;
         }
-        return CommandState.NOTHING;
+        return CommandState.INVALID_SENDER;
     }
 
     @Override

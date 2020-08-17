@@ -65,9 +65,8 @@ public class CommandRegister extends CommandAbstract {
             }
             return CommandState.NOTHING;
 
-        } else {
-            return CommandState.INVALID_SENDER;
         }
+        return CommandState.INVALID_SENDER;
     }
 
     @Override

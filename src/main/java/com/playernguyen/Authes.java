@@ -4,10 +4,7 @@ import com.playernguyen.account.Account;
 import com.playernguyen.account.AccountManager;
 import com.playernguyen.account.SQLAccountManager;
 import com.playernguyen.account.SessionManager;
-import com.playernguyen.command.CommandChangeEmail;
-import com.playernguyen.command.CommandLogin;
-import com.playernguyen.command.CommandManager;
-import com.playernguyen.command.CommandRegister;
+import com.playernguyen.command.*;
 import com.playernguyen.config.AuthesConfiguration;
 import com.playernguyen.config.AuthesLanguage;
 import com.playernguyen.config.ConfigurationFlag;
@@ -66,6 +63,7 @@ public class Authes extends JavaPlugin {
         commandManager.add(new CommandRegister());
         commandManager.add(new CommandLogin());
         commandManager.add(new CommandChangeEmail());
+        commandManager.add(new CommandChangePassword());
         // Register command
         commandManager.forEach(e -> {
             String command = e.getCommand();

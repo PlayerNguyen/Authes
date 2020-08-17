@@ -4,7 +4,6 @@ import com.playernguyen.AuthesInstance;
 import com.playernguyen.config.ConfigurationFlag;
 import com.playernguyen.util.ResultFetcher;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
@@ -89,14 +88,14 @@ public class SQLAccountManager extends AuthesInstance {
         return false;
     }
 
-    public boolean login(Player player, String plaintext) {
+    public boolean login(UUID uuid, String plaintext) {
         try (Connection connection = getEstablishment().openConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(String.format(
                     "SELECT * FROM `%s` WHERE `uuid`=?",
                     tableName
             ));
             // Set the parameter
-            preparedStatement.setString(1, player.getUniqueId().toString());
+            preparedStatement.setString(1, uuid.toString());
             ResultFetcher resultFetcher = new ResultFetcher(preparedStatement.executeQuery());
             // Handle hash check
             String hash = (String) resultFetcher.first().get("hash");
